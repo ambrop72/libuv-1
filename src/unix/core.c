@@ -214,6 +214,14 @@ void uv__make_close_pending(uv_handle_t* handle) {
   handle->loop->closing_handles = handle;
 }
 
+void uv__close_now(uv_handle_t* handle) {
+  assert(!uv__is_active(handle));
+
+  handle->flags |= UV_CLOSING | UV_CLOSED;
+  uv__handle_unref(handle);
+  QUEUE_REMOVE(&handle->handle_queue);
+}
+
 int uv__getiovmax(void) {
 #if defined(IOV_MAX)
   return IOV_MAX;

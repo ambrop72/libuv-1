@@ -59,6 +59,15 @@ int uv_timer_init(uv_loop_t* loop, uv_timer_t* handle) {
 }
 
 
+int uv_timer_close_now(uv_timer_t* handle) {
+  assert(!uv__is_closing(handle));
+
+  uv_timer_stop(handle);
+  uv__close_now((uv_handle_t *)handle);
+  return 0;
+}
+
+
 int uv_timer_start(uv_timer_t* handle,
                    uv_timer_cb cb,
                    uint64_t timeout,

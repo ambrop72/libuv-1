@@ -68,6 +68,15 @@ int uv_timer_init(uv_loop_t* loop, uv_timer_t* handle) {
 }
 
 
+int uv_timer_close_now(uv_timer_t* handle) {
+  assert(!(handle->flags & UV__HANDLE_CLOSING));
+
+  uv_timer_stop(handle);
+  uv__handle_close_now(handle);
+  return 0;
+}
+
+
 void uv_timer_endgame(uv_loop_t* loop, uv_timer_t* handle) {
   if (handle->flags & UV__HANDLE_CLOSING) {
     assert(!(handle->flags & UV_HANDLE_CLOSED));

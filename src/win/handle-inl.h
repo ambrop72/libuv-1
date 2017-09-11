@@ -85,6 +85,15 @@
   } while (0)
 
 
+#define uv__handle_close_now(handle)                                    \
+  do {                                                                  \
+    assert(!((handle)->flags & UV__HANDLE_ACTIVE));                     \
+                                                                        \
+    QUEUE_REMOVE(&(handle)->handle_queue);                              \
+    (handle)->flags |= UV__HANDLE_CLOSING | UV_HANDLE_CLOSED;           \
+  } while (0)
+
+
 INLINE static void uv_want_endgame(uv_loop_t* loop, uv_handle_t* handle) {
   if (!(handle->flags & UV_HANDLE_ENDGAME_QUEUED)) {
     handle->flags |= UV_HANDLE_ENDGAME_QUEUED;
